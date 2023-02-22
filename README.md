@@ -48,7 +48,7 @@ For more information about configuration, check the [mod-wsgi documentation](htt
 7.  navigate to /usr/local/www/wsgi-scripts and run: 
 ```sudo nano myapp.py```    
 
-Your script should look ==EXACTLY== like this.   
+Your script should look **EXACTLY** like this.   
 
 ```
 from parse import parse
