@@ -169,7 +169,11 @@ application = LoggingMiddleware(application)
 
     Make sure you can connect locally using the same user name and password. mysql -u [youruser] -p
 
-    If SELinux is running, make sure the "httpd_can_network_connect_db" boolean is set to on. Check with sudo getsebool httpd_can_network_connect_db. If it comes back as "off," set it to "on" with sudo setsebool -P httpd_can_network_connect_db on. (Make sure to include the -P, or it will revert back to the original value if the system restarts.)
+    If SELinux is running, make sure the "httpd_can_network_connect_db" boolean is set to on. 
+    Check with:   
+    ```sudo getsebool httpd_can_network_connect_db```    
+    If it comes back as "off," set it to "on" with 
+    ```sudo setsebool -P httpd_can_network_connect_db on```  (Make sure to include the -P, or it will revert back to the original value if the system restarts.)
 
 
 
