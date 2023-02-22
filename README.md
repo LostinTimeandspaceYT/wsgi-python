@@ -24,9 +24,10 @@ Basic WSGI framework
 – This is the main config file for Apache
 
 
-Step 5.) Paste the following into the httpd.conf file:  
+6. Paste the following into the httpd.conf file:  
 
-```WSGIScriptAlias /myapp /usr/local/www/wsgi-scripts/myapp.py
+```
+WSGIScriptAlias /myapp /usr/local/www/wsgi-scripts/myapp.py
 <Directory /usr/local/www/wsgi-scripts>
 <IfVersion < 2.4>
 Order allow,deny
@@ -35,7 +36,8 @@ Allow from all
 <IfVersion >= 2.4>
 Require all granted
 </IfVersion>
-</Directory>```  
+</Directory>
+```  
 
 Write out the changes and exit (Ctrl + O) Enter (Ctrl+X)
 
