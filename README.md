@@ -136,10 +136,10 @@ It is **Highly** reccommended that you create a virtual environment for your pro
 ## Debugging: ##  
 - Inside the httpd.conf file Apache sets the loglevel to warn by default. When developing applications, it is encouraged to change the level to 'info' by changing ```LogLevel warn``` to ```LogLevel info```  
 
-According to the [mod-wsgi doucmentation](https://modwsgi.readthedocs.io/en/master/user-guides/quick-configuration-guide.html)  
+- According to the [mod-wsgi doucmentation](https://modwsgi.readthedocs.io/en/master/user-guides/quick-configuration-guide.html)  
 >Messages that are logged by a WSGI application via the ‘wsgi.errors’ object passed through to the application in the WSGI environment are also logged. These will go to the virtual host error log file if it exists, or the main error log file if the virtual host is not setup with its own error log file. Thus, if you want to add debugging messages to your WSGI application code, you can use ‘wsgi.errors’ in conjunction with the ‘print’ statement as shown below:  
 
-Additionally, the documentation provides a sample class to track responses and requests:  
+- Additionally, the documentation provides a sample class to track responses and requests:  
 ```
 import pprint
 
