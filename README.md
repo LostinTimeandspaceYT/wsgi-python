@@ -155,7 +155,9 @@ class LoggingMiddleware:
 
 application = LoggingMiddleware(application)
 ```  
-
+- You can view the log file in a stream by opening a terminal and running the command:  
+``` sudo tail -f /var/log/httpd/error_log```  
+*Note: this is the default location for the Apache error log, If you are using a custom error log file, change the command accordingly.*  
 ---
 ## Known Issues / To Do list: ##
 
