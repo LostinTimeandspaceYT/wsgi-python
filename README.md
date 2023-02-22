@@ -46,13 +46,15 @@ Write out the changes and exit (Ctrl + O) Enter (Ctrl+X)
 Your script should look EXACTLY like this.   
 *Note: You may need to add the 'b' on line 3. This turns the string into a byte array object.*  
 
-```def application(environ, start_response):
+```
+def application(environ, start_response):
 status = '200 OK'
 output = b'Hello World!'
 response_headers = [('Content-type', 'text/plain'),
 ('Content-Length', str(len(output)))]
 start_response(status, response_headers)
-return [output]```  
+return [output]
+```  
 
 8. If the myapp.py file does not exist in the www/wsgi-scripts, you can create with the command:    
 ```sudo nano myapp.py```  
