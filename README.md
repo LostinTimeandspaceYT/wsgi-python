@@ -16,12 +16,13 @@
 ``` pip install mod-wsgi ```  
 – More info can be found at: https://pypi.org/project/mod-wsgi/  
 
-4. Run: 
-```sudo dnf install httpd python-setuptool mod_wsgi```  *This allow apache to recognize mod_wsgi as a CGI*  
+4. Run:  
+```sudo dnf install httpd python-setuptool mod_wsgi```    
+*This allow apache to recognize mod_wsgi as a CGI*  
 
 5. Navigate to /etc/httpd/conf and run:  
 ```sudo nano httpd.conf```  
-– This is the main config file for Apache
+*Note: This is the main config file for Apache; its location may change*
 
 
 6. Paste the following into the httpd.conf file:  
