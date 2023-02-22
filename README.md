@@ -163,6 +163,16 @@ application = LoggingMiddleware(application)
 - You can view the log file in a stream by opening a terminal and running the command:  
 ``` sudo tail -f /var/log/httpd/error_log```  
 *Note: this is the default location for the Apache error log; If you are using a custom error log file, change the command accordingly.*  
+
+- If you are experiencing issues connecting to MySQL, try the following: [Source](https://stackoverflow.com/a/56710474)
+>Some things to check, assuming this is a Linux machine:
+
+    Make sure you can connect locally using the same user name and password. mysql -u [youruser] -p
+
+    If SELinux is running, make sure the "httpd_can_network_connect_db" boolean is set to on. Check with sudo getsebool httpd_can_network_connect_db. If it comes back as "off," set it to "on" with sudo setsebool -P httpd_can_network_connect_db on. (Make sure to include the -P, or it will revert back to the original value if the system restarts.)
+
+
+
 ---
 ## Known Issues / To Do list: ##
 
