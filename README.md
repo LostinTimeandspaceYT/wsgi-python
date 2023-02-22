@@ -1,5 +1,5 @@
-# wsgi-python
-Basic WSGI framework
+# WSGI: Web Server Gateway Interface
+
 
 ## Steps to set-up mod_wsgi with apache on Fedora 37:  ## 
 *Note: If you're attempting to use this Framework on Unbuntu, you will need to use a different package manager like apt.*  
@@ -27,40 +27,125 @@ Basic WSGI framework
 6. Paste the following into the httpd.conf file:  
 
 ```
-WSGIScriptAlias /myapp /usr/local/www/wsgi-scripts/myapp.py
+WSGIDaemonProcess myapp python-home=/usr/local/www/wsgi-scripts/venv/
+WSGIProcessGroup myapp
+WSGIApplicationGroup %{GLOBAL}
+WSGIScriptAlias /app  /usr/local/www/wsgi-scripts/app.py
 <Directory /usr/local/www/wsgi-scripts>
 <IfVersion < 2.4>
-Order allow,deny
-Allow from all
+	Order allow, deny
+	Allow from all
 </IfVersion>
 <IfVersion >= 2.4>
-Require all granted
+	Require all granted
 </IfVersion>
 </Directory>
 ```  
 
-Write out the changes and exit (Ctrl + O) Enter (Ctrl+X)
+Write out the changes and exit (Ctrl + O) Enter (Ctrl+X)  
+For more information about configuration, check the [mod-wsgi documentation](https://modwsgi.readthedocs.io/en/master/user-guides/quick-configuration-guide.html)  
 
-7.  navigate to /usr/local/www/wsgi-scripts and run: sudo nano myapp.py  
+7.  navigate to /usr/local/www/wsgi-scripts and run: 
+```sudo nano myapp.py```    
 
-Your script should look EXACTLY like this.   
-*Note: You may need to add the 'b' on line 3. This turns the string into a byte array object.*  
+Your script should look ==EXACTLY== like this.   
 
 ```
-def application(environ, start_response):
-status = '200 OK'
-output = b'Hello World!'
-response_headers = [('Content-type', 'text/plain'),
-('Content-Length', str(len(output)))]
-start_response(status, response_headers)
-return [output]
-```  
+from parse import parse
+from webob import Request, Response
 
-8. If the myapp.py file does not exist in the www/wsgi-scripts, you can create with the command:    
-```sudo nano myapp.py```  
-*Note: you must be in the /usr/local/www/wsgi-scripts folder or copy the file to that directory.*
+
+class API:
+
+    def __init__(self):
+        self.routes = {}
+
+    def __call__(self, environ, start_response):
+        request = Request(environ)
+        response = self.handle_request(request)
+        return response(environ, start_response)
+
+    def route(self, path):
+        def wrapper(handler):
+            self.routes[path] = handler
+            return handler
+
+        return wrapper
+
+    def default_response(self, response):
+        response.status_code = 404
+        response.text = "Not found."
+
+    def find_handler(self, request_path):
+        for path, handler in self.routes.items():
+            parse_result = parse(path, request_path)
+            if parse_result is not None:
+                return handler, parse_result.named
+        return None, None
+
+    def handle_request(self, request):
+        response = Response()
+
+        handler, kwargs = self.find_handler(request_path=request.path)
+
+        if handler is not None:
+            handler(request, response, **kwargs)
+        else:
+            self.default_response(response)
+
+        return response
+
+
+application = API()
+
+
+@application.route("/app")
+def home(request, response):
+    response.text = "Hello from the APP page"
+
+
+@application.route("/app/home")
+def home(request, response):
+    response.text = "Hello from the HOME page"
+
+
+@application.route("/app/about")
+def about(request, response):
+    response.text = "Hello from the ABOUT page"
+
+
+@application.route("/app/hello/{name}")
+def greeting(request, response, name):
+    response.text = f"Hello, {name}"
+```  
+[^1]  
+*Note: The directory location needs to match the WSGIScriptAlias location.*
 
 9. Restart the server with the command:  
 ```sudo systemctl restart httpd.service```  
 
 10. Open a browser on your local machine and navigate to http://localhost/myapp and you should see the text 'Hello World!' in your browser.  
+
+---
+## Debugging: ##  
+According to the [mod-wsgi doucmentation](https://modwsgi.readthedocs.io/en/master/user-guides/quick-configuration-guide.html)  
+>Messages that are logged by a WSGI application via the ‘wsgi.errors’ object passed through to the application in the WSGI environment are also logged. These will go to the virtual host error log file if it exists, or the main error log file if the virtual host is not setup with its own error log file. Thus, if you want to add debugging messages to your WSGI application code, you can use ‘wsgi.errors’ in conjunction with the ‘print’ statement as shown below:  
+
+---
+## Known Issues / To Do list: ##
+
+- [ ] Fix ModuleNotFoundError experienced when import custom module.  
+- [ ] Begin Integrating MySQL into application.  
+- [ ] Iterate and Update Documentation as needed.   
+
+---
+## Sources / Additional Information: ##
+- [TestDriven.io : WSGI framework](https://testdriven.io/courses/python-web-framework/wsgi/)  
+- [TestDriven.io : Request and Routing](https://testdriven.io/courses/python-web-framework/requests-routing/)  
+- [PyPi : mod-wsgi overview](https://pypi.org/project/mod-wsgi/)
+- [mod_wsgi: documentation](https://modwsgi.readthedocs.io/en/master/)  
+- [Toptal : WSGI overview and implementation](https://www.toptal.com/python/pythons-wsgi-server-application-interface)  
+
+---  
+## Footnotes: ##  
+[^1]: The reason the code is combined in this fashion is due to a ModuleNotFoundError that needs to be resolved.
