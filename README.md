@@ -125,7 +125,8 @@ def greeting(request, response, name):
 9. Restart the server with the command:  
 ```sudo systemctl restart httpd.service```  
 
-10. Open a browser on your local machine and navigate to http://localhost/myapp and you should see the text 'Hello World!' in your browser.  
+10. Open a browser on your local machine and navigate to http://localhost/app and you should see the text 'Hello from the APP page.' in your browser. 
+11. Open a browser on your host machine and navigate to your Linux machine's IP ```yo.ur.ip.here/app``` to see the same message as before. 
 
 ---
 ## Debugging: ##  
