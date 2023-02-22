@@ -46,8 +46,7 @@ WSGIScriptAlias /app  /usr/local/www/wsgi-scripts/app.py
 Write out the changes and exit (Ctrl + O) Enter (Ctrl+X)  
 For more information about configuration, check the [mod-wsgi documentation](https://modwsgi.readthedocs.io/en/master/user-guides/quick-configuration-guide.html)  
 
-7.  navigate to /usr/local/www/wsgi-scripts and run: 
-```sudo nano myapp.py```    
+7.  In your IDE of choice, create the following file (or copy the app.py file in the repo):    
 
 Your script should look **EXACTLY** like this.   
 
@@ -121,12 +120,16 @@ def greeting(request, response, name):
 ```  
 [^1]  
 *Note: The directory location needs to match the WSGIScriptAlias location.*
+It is **Highly** reccommended that you create a virtual environment for your projects. For more information about virtual environments, [read the official documentation](https://docs.python.org/3/library/venv.html)  
 
-9. Restart the server with the command:  
+9. From the directory where your project lives, run the following command:
+```sudo cp *.* /usr/local/www/wsgi-scripts```  
+
+10. Restart the server with the command:  
 ```sudo systemctl restart httpd.service```  
 
-10. Open a browser on your local machine and navigate to http://localhost/app and you should see the text 'Hello from the APP page.' in your browser. 
-11. Open a browser on your host machine and navigate to your Linux machine's IP ```yo.ur.ip.here/app``` to see the same message as before. 
+11. Open a browser on your local machine and navigate to http://localhost/app and you should see the text 'Hello from the APP page.' in your browser. 
+12. Open a browser on your host machine and navigate to your Linux machine's IP ```yo.ur.ip.here/app``` to see the same message as before. 
 
 ---
 ## Debugging: ##  
