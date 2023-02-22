@@ -130,6 +130,7 @@ It is **Highly** reccommended that you create a virtual environment for your pro
 
 11. Open a browser on your local machine and navigate to http://localhost/app and you should see the text 'Hello from the APP page.' in your browser. 
 12. Open a browser on your host machine and navigate to your Linux machine's IP ```yo.ur.ip.here/app``` to see the same message as before. 
+*Note: you can find your machine's ip by running ```sudo ifconfig``` in a terminal.*  
 
 ---
 ## Debugging: ##  
