@@ -17,7 +17,7 @@
 – More info can be found at: https://pypi.org/project/mod-wsgi/  
 
 4. Run:  
-```sudo dnf install httpd python-setuptool mod_wsgi```    
+```sudo dnf install httpd python-setuptools mod_wsgi```    
 *This allow apache to recognize mod_wsgi as a CGI*  
 
 5. Navigate to /etc/httpd/conf and run:  
