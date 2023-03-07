@@ -3,6 +3,9 @@
 
 ## Steps to set-up mod_wsgi with apache on Fedora 37:  ## 
 *Note: If you're attempting to use this Framework on Unbuntu, you will need to use a different package manager like apt.*  
+0. Update the OS
+```sudo dnf update```
+
 1. Install Apache using the following commands  
 ``` sudo dnf install httpd -y ```  
 ``` sudo systemctl start httpd.service ```  
@@ -123,7 +126,8 @@ def greeting(request, response, name):
 It is **Highly** reccommended that you create a virtual environment for your projects. For more information about virtual environments, [read the official documentation](https://docs.python.org/3/library/venv.html)  
 
 9. From the directory where your project lives, run the following command:
-```sudo cp *.* /usr/local/www/wsgi-scripts```  
+```sudo cp *.* /usr/local/www/wsgi-scripts``` 
+*Note: you may need to make some of these directories with the ```sudo mkdir [folderName]```
 
 10. Restart the server with the command:  
 ```sudo systemctl restart httpd.service```  
