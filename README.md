@@ -2,7 +2,7 @@
 
 
 ## Steps to set-up mod_wsgi with apache on Fedora 37:  ## 
-*Note: If you're attempting to use this Framework on Unbuntu, you will need to use a different package manager like apt.*  
+*Note: If you're attempting to use this Framework on Unbuntu, you will need to use a different package manager like apt.*    
 0. Update the OS
 ```sudo dnf update```
 
@@ -15,13 +15,13 @@
 2. Install pip or another package manager. *Note: this guide will be using pip.*  
 ```sudo dnf install python3-pip```  
 
-3. Install mod_wsgi:  
-``` pip install mod-wsgi ```  
-– More info can be found at: https://pypi.org/project/mod-wsgi/  
-
-4. Run:  
+3. Run:  
 ```sudo dnf install httpd python-setuptools mod_wsgi```    
 *This allow apache to recognize mod_wsgi as a CGI*  
+
+4. Install mod_wsgi:  
+``` pip install mod-wsgi ```  
+– More info can be found at: https://pypi.org/project/mod-wsgi/    
 
 5. Navigate to /etc/httpd/conf and run:  
 ```sudo nano httpd.conf```  
