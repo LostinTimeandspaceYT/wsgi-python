@@ -53,7 +53,6 @@ class LoggingInstance:
     def link(self, iterable):
         self.__iterable = iter(iterable)
 
-
 class LoggingMiddleware:
 
     def __init__(self, application, savedir):
@@ -103,7 +102,6 @@ class LoggingMiddleware:
         iterable = LoggingInstance(start_response, oheaders_fp, ocontent_fp)
         iterable.link(self.__application(environ, iterable))
         return iterable
-
 
 class API:
 
@@ -183,16 +181,14 @@ def movies(request, response):
 
     cnx = connection.MySQLConnection(**config)
     cursor = cnx.cursor()
-    query = "SELECT m_id, m_title, genre FROM movie LIMIT 5"
+    query = "SELECT m_id, m_title, genre FROM Movie"
     cursor.execute(query)
-    titles = create_dict()
+    movies = []
+
     for title in cursor:
-        titles.add(title[0],({"m_title": title[1],"genre": title[2]}))
-    str_json = json.dumps(titles, indent=2, sort_keys=True)
-    print(str_json.encode())
-    response.text = str_json
+        movies.append({"m_id": title[0],"m_title": title[1],"genre": title[2]})
+        
+    json_str = json.dumps(movies, indent=2, sort_keys=True)
+    print(json_str.encode())
+    response.text = json_str  
     cnx.close()
-
-
-
-
