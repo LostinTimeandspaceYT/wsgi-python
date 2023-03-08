@@ -21,6 +21,7 @@
 
 4. Install mod_wsgi:  
 ``` pip install mod-wsgi ```  
+*Note: this is likely already installed but it is good to check with this command*
 – More info can be found at: https://pypi.org/project/mod-wsgi/    
 
 5. Navigate to /etc/httpd/conf and run:  
