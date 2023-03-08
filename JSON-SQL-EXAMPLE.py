@@ -190,7 +190,7 @@ def movies(request, response):
         titles.add(title[0],({"m_title": title[1],"genre": title[2]}))
     str_json = json.dumps(titles, indent=2, sort_keys=True)
     print(str_json.encode())
-    response.text = f"Now playing: {str_json}"
+    response.text = str_json
     cnx.close()
 
 
