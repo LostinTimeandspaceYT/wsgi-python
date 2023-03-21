@@ -1,0 +1,43 @@
+<script>
+
+function build_table(_data)
+{
+  console.log(_data)
+    $('#Movie-Table').DataTable( {
+        responsive: {responsiveR: true, details: false}, // must hide details, or hidden columns become child rows
+        data: $.parseJSON(_data),
+        rowId: 'm_id', // can get m_id later when edit or delete button is pressed
+        createdRow: function(row, data, index)
+        {
+
+        },
+        columns: [
+            {data: "m_id"},
+            {data: "m_title"},
+            {data: "genre"},
+            {data: "minutes"}
+        ]
+    });
+}
+
+$(document).ready(function(){
+
+    // get movies
+    $.ajax({
+        statusCode: {
+            404: function(){ alert("Movies not found"); }
+        },
+        async: true,
+        method:"POST",
+        cache: false,
+        url: "/app/movies",
+        data: { request:""},
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+            alert(errorThrown);
+        },
+    	success: function(data) { build_table(data) }
+    }); // end ajax
+
+}); // end ready
+  </script>
