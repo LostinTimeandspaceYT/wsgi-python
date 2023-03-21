@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!-- meta is to ensure the page fits on all devices-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+<head>
+
+  <title>Movies DB Application</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/assets/css/style.css" />
+</head> <!-- end of head -->
+
+<body>
+<!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="/app" class="logo d-flex align-items-center">
+        <img src="/assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">MoviesDB</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+  </header><!-- End Header -->
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Movie Tables</h1>
+    </div><!-- End Page Title -->
+
+<section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">All Movies</h5>
+
+              <!-- Default Table -->
+              <table id="Movie-Table" class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Movie ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Genre</th>
+                    <th scope="col">Duration (mins)</th>
+                    <th scope="col">Release Date</th>
+                    <th scope="col">Budget</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Studio</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+</main> <!-- end of main -->
+
+</body> <!-- end of body -->
+
+<script>
+
+function select_movie(event)
+{
+  console.log(event)
+  
+
+}  
+
+function build_table(_data)
+{
+  console.log(_data)
+    $('#Movie-Table').DataTable( {
+        responsive: {responsiveR: true, details: false}, // must hide details, or hidden columns become child rows
+        data: $.parseJSON(_data),
+        rowId: 'm_id', // can get m_id later when edit or delete button is pressed
+        createdRow: function(row, data, index)
+        {
+
+        },
+        columns: 
+        [
+            {data: "m_id"},
+            {data: "m_title"},
+            {data: "genre"},
+            {data: "minutes"},
+            {data: "release_date"},
+            {data: "budget"},
+            {data: "r_id"},
+            {data: "studio_id"},
+            { "mData": null, "bSortable": false,"mRender": function(data, type, full) {
+        return '<a class="btn btn-info btn-sm" href=#/' + full[0] + '>' + 'Select' + '</a>';}}
+        ]
+    });
+}
+
+$(document).ready(function(){
+
+    // get movies
+    $.ajax({
+        statusCode: {
+            404: function(){ alert("Movies not found"); }
+        },
+        async: true,
+        method:"POST",
+        cache: false,
+        url: "/app/movies",
+        data: { request:""},
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+            alert(errorThrown);
+        },
+    	success: function(data) { build_table(data) }
+    }); // end ajax
+
+}); // end ready
+  </script>
