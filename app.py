@@ -199,7 +199,6 @@ def movies(request, response):
 
 @application.route("/app/movies/{id}")
 def get_movie(request, response, id):
-    print(f" id = {id}")
 
     cnx = connection.MySQLConnection(**config)
     cursor = cnx.cursor()
@@ -213,6 +212,24 @@ def get_movie(request, response, id):
     
     json_str = json.dumps(movie, indent=2, sort_keys=True, default=str)
     print(json_str.encode())
+    response.text = json_str
+    cnx.close()
+
+
+@application.route("/app/theatermovies/{id}")
+def theater_movie(request, response, id):
+
+    cnx = connection.MySQLConnection(**config)
+    cursor = cnx.cursor()
+    query = f"SELECT TheaterMovie.theater_id, Theater.name, Movie.m_title FROM TheaterMovie INNER JOIN Movie ON TheaterMovie.m_id = Movie.m_idINNER JOIN Theater ON TheaterMovie.theater_id = Theater.theater_id WHERE TheaterMovie.theater_id = {id};"
+    cursor.execute(query)
+
+    movies = []
+
+    for movie in cursor:
+        movies.append({"theater_id":movie[0],"name":movie[1], "m_title": movie[2]})
+    
+    json_str = json.dumps(movies, indent=2, sort_keys=True, default=str)
     response.text = json_str
     cnx.close()
 
