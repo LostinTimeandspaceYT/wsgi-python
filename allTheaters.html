@@ -96,12 +96,7 @@
   </aside><!-- End Sidebar-->
 
 
-
 <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>Theater Tables</h1>
-    </div><!-- End Page Title -->
     <div class="pagetitle">
       <h1>Dashboard</h1>
       <nav>
@@ -130,7 +125,7 @@
                     <th scope="col">State</th>
                     <th scope="col">Zip Code</th>
                     <th scope="col">Phone #</th>
-                    <th scope="col">Webiste</th>
+                    <th scope="col">Website</th>
                     <th scope="col">Actions</th>
                   </tr>
                 </thead>
@@ -181,6 +176,7 @@
   function edit_movies(edit_button)
   {
     var t_id = $(edit_button).closest('tr').prop('id');
+    sessionStorage.setItem("theater_id",t_id)
     
     // get movies
     $.ajax({
@@ -196,7 +192,7 @@
       {
           alert(errorThrown); 
       },
-          success: function(data) { window.location = "/theaters"; }
+          success: function(data) { window.location = "/theatermovies";}
         }); // end ajax 
   
   }  
@@ -223,7 +219,7 @@
               {data: "phone"},
               {data: "website"},
               { data: null, "bSortable": false,"mRender": function(data, type, full) {
-          return '<a class="btn btn-info btn-sm" onclick="edit_movies(this)"' + full[0] + '>' + 'Edit/View Movies' + '</a>';}}
+          return '<a class="btn btn-info btn-sm" onclick="edit_movies(this)"'  + full[0] + '> View/Edit Movies</a>';}}
           ]
       });
   }
