@@ -160,6 +160,9 @@ config = {
 def greeting(request, response, name):
     response.text = f"Hello, {name}"
 
+@application.route("/app/movies/add")
+def add_movie(request, response, movie):
+    pass
 
 @application.route("/app/theaters")
 def theaters(request, response):
@@ -196,7 +199,24 @@ def movies(request, response):
     response.text = json_str  
     cnx.close()
 
+@application.route("/app/theatermovies/{t_id}/remove/{m_id}")
+def remove_movie(request, response, t_id, m_id):
+    cnx = connection.MySQLConnection(**config)
+    cursor = cnx.cursor()
+    query = f"DELETE FROM TheaterMovie WHERE theater_id = '{t_id}' AND m_id = '{m_id}'"
+    cursor.execute(query)
+    cnx.commit()
+    movies = []
+    
+    for movie in cursor:
+        movies.append({"theater_id":movie[0],"name":movie[1], "m_title": movie[2], "m_id":movie[3], "start_date": movie[4], "end_date": movie[5]})
+    
+    json_str = json.dumps(movies, indent=2, sort_keys=True, default=str)
+    response.text = json_str
+    cnx.close()
 
+
+# Gets an individual movie
 @application.route("/app/movies/{id}")
 def get_movie(request, response, id):
 
@@ -215,22 +235,20 @@ def get_movie(request, response, id):
     response.text = json_str
     cnx.close()
 
-
+# Gets the TheaterMovie data in a readable fashion
 @application.route("/app/theatermovies/{id}")
 def theater_movie(request, response, id):
 
     cnx = connection.MySQLConnection(**config)
     cursor = cnx.cursor()
-    query = f"SELECT TheaterMovie.theater_id, Theater.name, Movie.m_title FROM TheaterMovie INNER JOIN Movie ON TheaterMovie.m_id = Movie.m_idINNER JOIN Theater ON TheaterMovie.theater_id = Theater.theater_id WHERE TheaterMovie.theater_id = {id};"
+    query = f"SELECT TheaterMovie.theater_id, Theater.name, Movie.m_title, Movie.m_id, TheaterMovie.start_date, TheaterMovie.end_date FROM TheaterMovie INNER JOIN Movie ON TheaterMovie.m_id = Movie.m_id INNER JOIN Theater ON TheaterMovie.theater_id = Theater.theater_id WHERE TheaterMovie.theater_id = '{id}';"
     cursor.execute(query)
-
     movies = []
 
     for movie in cursor:
-        movies.append({"theater_id":movie[0],"name":movie[1], "m_title": movie[2]})
+        movies.append({"theater_id":movie[0],"name":movie[1], "m_title": movie[2], "m_id":movie[3], "start_date": movie[4], "end_date": movie[5]})
     
     json_str = json.dumps(movies, indent=2, sort_keys=True, default=str)
     response.text = json_str
     cnx.close()
-
 
