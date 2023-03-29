@@ -160,10 +160,8 @@ config = {
 def greeting(request, response, name):
     response.text = f"Hello, {name}"
 
-@application.route("/app/movies/add")
-def add_movie(request, response, movie):
-    pass
 
+# Get all theaters
 @application.route("/app/theaters")
 def theaters(request, response):
     cnx = connection.MySQLConnection(**config)
@@ -181,6 +179,7 @@ def theaters(request, response):
     cnx.close()
 
 
+# Gets all movies
 @application.route("/app/movies")
 def movies(request, response):
 
@@ -199,6 +198,8 @@ def movies(request, response):
     response.text = json_str  
     cnx.close()
 
+
+# Removes a movie from a theater movie table
 @application.route("/app/theatermovies/{t_id}/remove/{m_id}")
 def remove_movie(request, response, t_id, m_id):
     cnx = connection.MySQLConnection(**config)
@@ -214,6 +215,23 @@ def remove_movie(request, response, t_id, m_id):
     json_str = json.dumps(movies, indent=2, sort_keys=True, default=str)
     response.text = json_str
     cnx.close()
+    
+
+# Adds a movie to a theater movie table
+@application.route("/app/theatermovies/{t_id}/add/{m_id}")
+def add_movie(request, response, t_id, m_id):
+    cnx = connection.MySQLConnection(**config)
+    cursor = cnx.cursor()
+    query = f"INSERT INTO TheaterMovie (theater_id, m_id) VALUES ('{t_id}', '{m_id}');"
+    try:
+        cursor.execute(query)
+        cnx.commit()
+
+    except errorcode:
+        response.text = f"Failed to add movie to {t_id}"
+
+    finally:
+        cnx.close()
 
 
 # Gets an individual movie
@@ -235,20 +253,21 @@ def get_movie(request, response, id):
     response.text = json_str
     cnx.close()
 
+
 # Gets the TheaterMovie data in a readable fashion
 @application.route("/app/theatermovies/{id}")
 def theater_movie(request, response, id):
 
     cnx = connection.MySQLConnection(**config)
     cursor = cnx.cursor()
-    query = f"SELECT TheaterMovie.theater_id, Theater.name, Movie.m_title, Movie.m_id, TheaterMovie.start_date, TheaterMovie.end_date FROM TheaterMovie INNER JOIN Movie ON TheaterMovie.m_id = Movie.m_id INNER JOIN Theater ON TheaterMovie.theater_id = Theater.theater_id WHERE TheaterMovie.theater_id = '{id}';"
+    query = f"SELECT TheaterMovie.theater_id, Theater.name, Movie.m_title, Movie.m_id, TheaterMovie.ticket_sales, TheaterMovie.start_date, TheaterMovie.end_date FROM TheaterMovie INNER JOIN Movie ON TheaterMovie.m_id = Movie.m_id INNER JOIN Theater ON TheaterMovie.theater_id = Theater.theater_id WHERE TheaterMovie.theater_id = '{id}';"
     cursor.execute(query)
     movies = []
 
     for movie in cursor:
-        movies.append({"theater_id":movie[0],"name":movie[1], "m_title": movie[2], "m_id":movie[3], "start_date": movie[4], "end_date": movie[5]})
+        movies.append({"theater_id":movie[0],"name":movie[1], "m_title": movie[2], "m_id":movie[3], "ticket_sales": movie[4], 
+                       "start_date": movie[5], "end_date": movie[6]})
     
-    json_str = json.dumps(movies, indent=2, sort_keys=True, default=str)
+    json_str = json.dumps(movies, indent=2, sort_keys=False, default=str)
     response.text = json_str
     cnx.close()
-
