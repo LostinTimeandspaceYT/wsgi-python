@@ -99,8 +99,6 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-    </div><!-- End Page Title -->
-    <div class="pagetitle">
       <h1>Dashboard</h1>
       <nav>
         <ol class="breadcrumb">
@@ -117,7 +115,7 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">All Theaters</h5>
+              <h5 class="card-title">Movies for Theater</h5>
 
               <!-- Default Table -->
               <table id="theaterMovie-Table" class="table table-hover">
@@ -133,12 +131,27 @@
                 </tbody>
               </table>
               <!-- End Default Table Example -->
-
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Sales Chart</h5>
+        
+              <!-- Bar Chart -->
+              <canvas id="SalesChart" style="max-height: 400px;"></canvas>
+              <!-- End Bar CHart -->
+        
             </div>
           </div>
         </div>
       </div>
 </section>
+
+
+
+
 </main> <!-- end of main -->
 
   <!-- ======= Footer ======= -->
@@ -174,9 +187,9 @@
 
 <script>
 
-  function remove_movie(edit_button)
+  function remove_movie(remove_button)
   {
-    var m_id = $(edit_button).closest('tr').prop('id');
+    var m_id = $(remove_button).closest('tr').prop('id');
     var t_id = sessionStorage.getItem("theater_id");
     var table = $('#theaterMovie-Table').DataTable();
     alert("Are you sure you want to remove " + m_id + " from " + t_id + "?");
@@ -200,9 +213,13 @@
             
         }
         }); // end ajax 
-  
   }  
   
+  function edit_movie(edit_button)
+  {
+    
+  }
+
   function build_table(_data)
   {
     // destroy old table if it exists 
@@ -223,14 +240,83 @@
           },
           columns: 
           [
-              // {data: "theater_id"},
               {data: "m_title"},
               {data: "start_date"},
               {data: "end_date"},
               { data: null, "bSortable": false,"mRender": function(data, type, full) {
-          return '<button type="button" class="btn btn-danger" onclick="remove_movie(this)"><i class="bi bi-exclamation-octagon"></i> Remove</button>';}}
+          return '<div class="btn-group" role="group">'
+                + '<button type="button" class="btn btn-danger" onclick=remove_movie(this)>Remove</button>' +
+                '<button type="button" class="btn btn-warning" onclick=edit_movie(this)>Edit</button>' +
+                '<button type="button" class="btn btn-success">View</button></div>';;}}
           ]
       });
+  }
+
+  // https://www.geeksforgeeks.org/create-a-chart-from-json-data-using-fetch-get-request-fetch-api-in-javascript/
+  function build_chart(_data)
+  {
+    var ch = Chart.getChart("SalesChart");
+    if (ch != undefined)
+    {
+      ch.destroy();
+    }
+
+    var labels = [];
+    var values = [];
+    var data = $.parseJSON(_data);
+    var length = Object.keys(data).length;
+
+    for(i =0; i < length; ++i)
+    {
+      var log = "logging: " + i + " " + data[i].m_title + " " + data[i].ticket_sales;
+      console.log(log)
+      labels.push(data[i].m_title);
+      values.push(data[i].ticket_sales);
+    }
+
+    new Chart(document.getElementById("SalesChart"), 
+    {
+      type: 'bar',
+      data:
+      {
+        labels: labels,
+        datasets: 
+        [{
+          label: "Sales (USD)",
+          data: values,
+          backgroundColor: [
+                          'rgba(255, 99, 132, 0.2)',
+                          'rgba(255, 159, 64, 0.2)',
+                          'rgba(255, 205, 86, 0.2)',
+                          'rgba(75, 192, 192, 0.2)',
+                          'rgba(54, 162, 235, 0.2)',
+                          'rgba(153, 102, 255, 0.2)',
+                          'rgba(201, 203, 207, 0.2)'
+                        ],
+          borderColor: [
+                          'rgb(255, 99, 132)',
+                          'rgb(255, 159, 64)',
+                          'rgb(255, 205, 86)',
+                          'rgb(75, 192, 192)',
+                          'rgb(54, 162, 235)',
+                          'rgb(153, 102, 255)',
+                          'rgb(201, 203, 207)'
+                        ],
+          borderWidth: 1
+
+        }]
+
+      },
+      options: 
+      {
+        legend: {display: false},
+        title: 
+        {
+          display: true,
+          text: "Total Ticket Sales"
+        }
+      }
+    });
   }
 
   // Used to get theater movies after removing an entry
@@ -251,7 +337,7 @@
           {
               alert(errorThrown);
           },
-        success: function(data) { build_table(data) }
+        success: function(data) { build_table(data), build_chart(data) }
       }); // end ajax
 
   }
@@ -275,7 +361,7 @@
           {
               alert(errorThrown);
           },
-        success: function(data) { build_table(data) }
+        success: function(data) { build_table(data), build_chart(data) }
       }); // end ajax
   
   }); // end ready
