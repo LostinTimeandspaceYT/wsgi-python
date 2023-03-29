@@ -185,26 +185,35 @@
 
 <script>
 
-function add_movie(edit_button)
+function add_movie(add_button)
 {
-  var movie_id = $(edit_button).closest('tr').prop('id');
-  
-  // get authors
-  $.ajax({
+  var movie_id = $(add_button).closest('tr').prop('id');
+  const t_id = sessionStorage.getItem("theater_id")
+  if (t_id == null)
+  {
+    alert("No Theater has been selected")
+    return;
+  }
+  else
+  {
+    $.ajax({
 		statusCode: {
 		    404: function(){ alert("Movie not found"); }
 		},
 		async: true,
 		method:"POST",
 		cache: false,
-		url: "app/movies/${id}",
-		data: { request:"", movie_id },
+		url: "/app/theatermovies/" + t_id + "/add/" + movie_id,
+		data: { request:"", t_id, movie_id },
 		error: function(jqXHR, textStatus, errorThrown)
 		{
 		    alert(errorThrown); 
 		},
 	    	success: function(data) { window.location = ""; }
 	    }); // end ajax 
+  }
+  
+
 
 }  
 
