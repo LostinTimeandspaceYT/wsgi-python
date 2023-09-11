@@ -54,7 +54,7 @@ For more information about configuration, check the [mod-wsgi documentation](htt
 
 Your script should look **EXACTLY** like this.   
 
-```
+```py
 from parse import parse
 from webob import Request, Response
 
@@ -145,7 +145,7 @@ It is **Highly** reccommended that you create a virtual environment for your pro
 >Messages that are logged by a WSGI application via the ‘wsgi.errors’ object passed through to the application in the WSGI environment are also logged. These will go to the virtual host error log file if it exists, or the main error log file if the virtual host is not setup with its own error log file. Thus, if you want to add debugging messages to your WSGI application code, you can use ‘wsgi.errors’ in conjunction with the ‘print’ statement as shown below:  
 
 - Additionally, the documentation provides a sample class to track responses and requests:  
-```
+```py
 import pprint
 
 class LoggingMiddleware:
